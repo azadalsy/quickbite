@@ -3,13 +3,13 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000";
 
-const categoryOptions = ["All", "Meals", "Desserts", "Drinks"];
+const categoryOptions = ["All", "Meals", "Soups", "Desserts", "Drinks"];
 
 const sampleFoods = [
   {
     _id: "demo-meal-1",
     name: "Classic Burger",
-    price: 10,
+    price: 39,
     category: "Meals",
     image:
       "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80",
@@ -17,7 +17,7 @@ const sampleFoods = [
   {
     _id: "demo-meal-2",
     name: "Margherita Pizza",
-    price: 15,
+    price: 42,
     category: "Meals",
     image:
       "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80",
@@ -25,7 +25,7 @@ const sampleFoods = [
   {
     _id: "demo-meal-3",
     name: "Chicken Kebab",
-    price: 18,
+    price: 34,
     category: "Meals",
     image:
       "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=900&q=80",
@@ -33,7 +33,7 @@ const sampleFoods = [
   {
     _id: "demo-meal-4",
     name: "Creamy Pasta",
-    price: 13,
+    price: 38,
     category: "Meals",
     image:
       "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=900&q=80",
@@ -41,15 +41,55 @@ const sampleFoods = [
   {
     _id: "demo-meal-5",
     name: "Fresh Salad",
-    price: 9,
+    price: 29,
     category: "Meals",
     image:
       "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=80",
   },
   {
+    _id: "demo-soup-1",
+    name: "Tomato Soup",
+    price: 19,
+    category: "Soups",
+    image:
+      "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    _id: "demo-soup-2",
+    name: "Lentil Soup",
+    price: 18,
+    category: "Soups",
+    image:
+      "https://images.unsplash.com/photo-1613844237701-8f3664fc2eff?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    _id: "demo-soup-3",
+    name: "Chicken Noodle Soup",
+    price: 23,
+    category: "Soups",
+    image:
+      "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    _id: "demo-soup-4",
+    name: "Mushroom Cream Soup",
+    price: 24,
+    category: "Soups",
+    image:
+      "https://images.unsplash.com/photo-1632931057819-4eefffa8e007?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    _id: "demo-soup-5",
+    name: "Vegetable Soup",
+    price: 20,
+    category: "Soups",
+    image:
+      "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?auto=format&fit=crop&w=900&q=80",
+  },
+  {
     _id: "demo-dessert-1",
     name: "Chocolate Cake",
-    price: 7,
+    price: 24,
     category: "Desserts",
     image:
       "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80",
@@ -57,7 +97,7 @@ const sampleFoods = [
   {
     _id: "demo-dessert-2",
     name: "Baklava",
-    price: 6,
+    price: 22,
     category: "Desserts",
     image:
       "https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&w=900&q=80",
@@ -65,7 +105,7 @@ const sampleFoods = [
   {
     _id: "demo-dessert-3",
     name: "Ice Cream",
-    price: 5,
+    price: 20,
     category: "Desserts",
     image:
       "https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?auto=format&fit=crop&w=900&q=80",
@@ -73,7 +113,7 @@ const sampleFoods = [
   {
     _id: "demo-dessert-4",
     name: "Cheesecake",
-    price: 8,
+    price: 26,
     category: "Desserts",
     image:
       "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=900&q=80",
@@ -81,7 +121,7 @@ const sampleFoods = [
   {
     _id: "demo-dessert-5",
     name: "Fruit Tart",
-    price: 7,
+    price: 25,
     category: "Desserts",
     image:
       "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80",
@@ -89,7 +129,7 @@ const sampleFoods = [
   {
     _id: "demo-drink-1",
     name: "Fresh Orange Juice",
-    price: 4,
+    price: 16,
     category: "Drinks",
     image:
       "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=900&q=80",
@@ -97,7 +137,7 @@ const sampleFoods = [
   {
     _id: "demo-drink-2",
     name: "Iced Coffee",
-    price: 5,
+    price: 18,
     category: "Drinks",
     image:
       "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=900&q=80",
@@ -105,7 +145,7 @@ const sampleFoods = [
   {
     _id: "demo-drink-3",
     name: "Mint Lemonade",
-    price: 4,
+    price: 17,
     category: "Drinks",
     image:
       "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=900&q=80",
@@ -113,7 +153,7 @@ const sampleFoods = [
   {
     _id: "demo-drink-4",
     name: "Hot Tea",
-    price: 3,
+    price: 12,
     category: "Drinks",
     image:
       "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=900&q=80",
@@ -121,7 +161,7 @@ const sampleFoods = [
   {
     _id: "demo-drink-5",
     name: "Sparkling Water",
-    price: 2,
+    price: 8,
     category: "Drinks",
     image:
       "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=900&q=80",
@@ -164,6 +204,12 @@ const menuMeta = [
     category: "Meals",
     image:
       "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    keys: ["soup", "lentil", "tomato soup", "noodle soup", "mushroom soup"],
+    category: "Soups",
+    image:
+      "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80",
   },
   {
     keys: ["cake", "tort"],
@@ -230,6 +276,10 @@ function getFoodMeta(name = "") {
   );
 }
 
+function getCartKey(user) {
+  return `quickbite-cart-${user?.id || user?.email || "guest"}`;
+}
+
 function App() {
   const [foods, setFoods] = useState([]);
   const [foodForm, setFoodForm] = useState({ name: "", price: "" });
@@ -244,10 +294,40 @@ function App() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [liveNotification, setLiveNotification] = useState("");
+  const [weather, setWeather] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     fetchFoods();
+    fetchWeather();
+    fetchAnalytics();
+
+    const events = new EventSource(`${API_URL}/events`);
+    events.onmessage = (event) => {
+      const notification = JSON.parse(event.data);
+      setLiveNotification(notification.message);
+    };
+
+    events.onerror = () => {
+      events.close();
+    };
+
+    return () => {
+      events.close();
+    };
   }, []);
+
+  useEffect(() => {
+    if (!loggedUser) {
+      setCartItems([]);
+      return;
+    }
+
+    const savedCart = localStorage.getItem(getCartKey(loggedUser));
+    setCartItems(savedCart ? JSON.parse(savedCart) : []);
+  }, [loggedUser]);
 
   const menuItems = useMemo(
     () =>
@@ -263,6 +343,25 @@ function App() {
       ? menuItems
       : menuItems.filter((food) => food.category === activeCategory);
 
+  const isAdmin = loggedUser?.role === "admin";
+
+  const cartTotal = useMemo(
+    () =>
+      cartItems.reduce(
+        (total, item) => total + Number(item.price) * item.quantity,
+        0
+      ),
+    [cartItems]
+  );
+
+  const saveCart = (nextCart) => {
+    setCartItems(nextCart);
+
+    if (loggedUser) {
+      localStorage.setItem(getCartKey(loggedUser), JSON.stringify(nextCart));
+    }
+  };
+
   const fetchFoods = async () => {
     try {
       const response = await axios.get(`${API_URL}/foods`);
@@ -275,6 +374,24 @@ function App() {
       console.error(error);
       setFoods(sampleFoods);
       setMessage("");
+    }
+  };
+
+  const fetchWeather = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/weather`);
+      setWeather(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/analytics`);
+      setAnalytics(response.data.data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -319,6 +436,7 @@ function App() {
       );
 
       setFoods((currentFoods) => [...currentFoods, response.data.food]);
+      fetchAnalytics();
       setFoodForm({ name: "", price: "" });
       setMessage("Food added successfully.");
     } catch (error) {
@@ -399,6 +517,55 @@ function App() {
     setMessage("Logged out.");
   };
 
+  const addToCart = (food) => {
+    if (!loggedUser) {
+      setMessage("Please login to add items to your cart.");
+      return;
+    }
+
+    const nextCart = cartItems.some((item) => item.id === food._id)
+      ? cartItems.map((item) =>
+          item.id === food._id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      : [
+          ...cartItems,
+          {
+            id: food._id,
+            name: food.name,
+            price: Number(food.price),
+            image: food.image,
+            category: food.category,
+            quantity: 1,
+          },
+        ];
+
+    saveCart(nextCart);
+    setMessage(`${food.name} added to your cart.`);
+  };
+
+  const changeCartQuantity = (id, amount) => {
+    const nextCart = cartItems
+      .map((item) =>
+        item.id === id
+          ? { ...item, quantity: Math.max(item.quantity + amount, 0) }
+          : item
+      )
+      .filter((item) => item.quantity > 0);
+
+    saveCart(nextCart);
+  };
+
+  const removeFromCart = (id) => {
+    saveCart(cartItems.filter((item) => item.id !== id));
+  };
+
+  const clearCart = () => {
+    saveCart([]);
+    setMessage("Cart cleared.");
+  };
+
   const deleteFood = async (id) => {
     if (id.startsWith("demo-")) {
       setFoods((currentFoods) => currentFoods.filter((food) => food._id !== id));
@@ -411,6 +578,7 @@ function App() {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       setFoods((currentFoods) => currentFoods.filter((food) => food._id !== id));
+      fetchAnalytics();
       setMessage("Food deleted successfully.");
     } catch (error) {
       console.error(error);
@@ -452,6 +620,7 @@ function App() {
           currentFood._id === food._id ? response.data.food : currentFood
         )
       );
+      fetchAnalytics();
       setMessage("Food updated successfully.");
     } catch (error) {
       console.error(error);
@@ -468,7 +637,7 @@ function App() {
             <p className="eyebrow">Fresh taste, fast service</p>
             <h1>QuickBite Restaurant</h1>
             <p className="hero__text">
-              Meals, desserts and drinks in one warm restaurant menu.
+              Meals, soups, desserts and drinks in one warm restaurant menu.
             </p>
           </div>
         </section>
@@ -536,6 +705,29 @@ function App() {
         </section>
 
         {message && <p className="message">{message}</p>}
+        {liveNotification && (
+          <p className="message live-message">Live update: {liveNotification}</p>
+        )}
+
+        <section className="insights-grid">
+          <article className="insight-card">
+            <span>Third-party API</span>
+            <h2>{weather?.temperature ?? "--"} C</h2>
+            <p>Warsaw weather by Open-Meteo for delivery demand planning.</p>
+          </article>
+
+          <article className="insight-card">
+            <span>Analytics</span>
+            <h2>{analytics?.totalFoods ?? menuItems.length}</h2>
+            <p>Total menu items tracked through the backend database.</p>
+          </article>
+
+          <article className="insight-card">
+            <span>Average price</span>
+            <h2>{analytics?.averagePrice ?? "0.00"} PLN</h2>
+            <p>Calculated from stored restaurant products.</p>
+          </article>
+        </section>
 
         <section className="panel">
           <div className="section-head">
@@ -544,7 +736,8 @@ function App() {
               <h2>Popular Choices</h2>
             </div>
 
-            <form onSubmit={addFood} className="add-form">
+            {isAdmin && (
+              <form onSubmit={addFood} className="add-form">
               <input
                 name="name"
                 type="text"
@@ -557,14 +750,15 @@ function App() {
                 type="number"
                 min="0"
                 step="0.01"
-                placeholder="Price"
+                  placeholder="Price (PLN)"
                 value={foodForm.price}
                 onChange={handleFoodChange}
               />
               <button type="submit" disabled={isLoading}>
                 Add
               </button>
-            </form>
+              </form>
+            )}
           </div>
 
           <div className="categories">
@@ -591,19 +785,26 @@ function App() {
                     <span>{food.category}</span>
                     <div className="food-card__title">
                       <h3>{food.name}</h3>
-                      <strong>${Number(food.price).toFixed(2)}</strong>
+                      <strong>{Number(food.price).toFixed(2)} PLN</strong>
                     </div>
                     <div className="actions">
-                      <button type="button" onClick={() => editFood(food)}>
-                        Edit
+                      <button type="button" onClick={() => addToCart(food)}>
+                        Add to cart
                       </button>
-                      <button
-                        type="button"
-                        className="danger"
-                        onClick={() => deleteFood(food._id)}
-                      >
-                        Delete
-                      </button>
+                      {isAdmin && (
+                        <>
+                          <button type="button" onClick={() => editFood(food)}>
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            className="danger"
+                            onClick={() => deleteFood(food._id)}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </article>
@@ -611,6 +812,63 @@ function App() {
             </div>
           )}
         </section>
+
+        {loggedUser && (
+          <section className="panel cart-panel">
+            <div className="section-head">
+              <div>
+                <p className="eyebrow">Personal cart</p>
+                <h2>{loggedUser.name}'s Cart</h2>
+              </div>
+              <strong className="cart-total">{cartTotal.toFixed(2)} PLN</strong>
+            </div>
+
+            {cartItems.length === 0 ? (
+              <p className="empty">Your cart is empty.</p>
+            ) : (
+              <>
+                <div className="cart-list">
+                  {cartItems.map((item) => (
+                    <article key={item.id} className="cart-item">
+                      <img src={item.image} alt={item.name} />
+                      <div>
+                        <h3>{item.name}</h3>
+                        <p>
+                          {item.quantity} x {Number(item.price).toFixed(2)} PLN
+                        </p>
+                      </div>
+                      <div className="qty-actions">
+                        <button
+                          type="button"
+                          onClick={() => changeCartQuantity(item.id, -1)}
+                        >
+                          -
+                        </button>
+                        <strong>{item.quantity}</strong>
+                        <button
+                          type="button"
+                          onClick={() => changeCartQuantity(item.id, 1)}
+                        >
+                          +
+                        </button>
+                        <button
+                          type="button"
+                          className="danger"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+                <button type="button" className="clear-cart" onClick={clearCart}>
+                  Clear cart
+                </button>
+              </>
+            )}
+          </section>
+        )}
       </main>
     </>
   );
@@ -776,6 +1034,45 @@ h2 {
   font-weight: 700;
 }
 
+.live-message {
+  color: #22533d;
+  background: #e9f8ef;
+  border-color: #bfe8cf;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.insight-card {
+  padding: 18px;
+  border-radius: 10px;
+  background: rgba(255, 252, 247, 0.92);
+  border: 1px solid rgba(234, 216, 199, 0.9);
+  box-shadow: 0 14px 35px rgba(74, 45, 30, 0.1);
+}
+
+.insight-card span {
+  color: #2f6b4f;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.insight-card h2 {
+  margin: 8px 0;
+  color: #c64b2a;
+}
+
+.insight-card p {
+  margin-bottom: 0;
+  color: #6c5b51;
+  font-weight: 700;
+}
+
 .section-head {
   display: flex;
   align-items: end;
@@ -880,6 +1177,70 @@ h2 {
   background: #b3261e;
 }
 
+.cart-panel {
+  margin-bottom: 24px;
+}
+
+.cart-total {
+  color: #c64b2a;
+  font-size: 28px;
+}
+
+.cart-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 74px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid #ead8c7;
+  border-radius: 10px;
+  background: #fffdf9;
+}
+
+.cart-item img {
+  width: 74px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.cart-item h3 {
+  margin-bottom: 4px;
+  font-size: 18px;
+}
+
+.cart-item p {
+  margin-bottom: 0;
+  color: #6c5b51;
+  font-weight: 700;
+}
+
+.qty-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-actions button {
+  min-width: 38px;
+  padding: 9px 10px;
+}
+
+.qty-actions .danger {
+  color: #fff;
+  background: #b3261e;
+}
+
+.clear-cart {
+  margin-top: 14px;
+}
+
 .empty {
   margin-bottom: 0;
   color: #6c5b51;
@@ -901,13 +1262,24 @@ h2 {
   }
 
   .auth-panel,
-  .section-head {
+  .section-head,
+  .insights-grid {
     grid-template-columns: 1fr;
     display: grid;
   }
 
   .add-form {
     grid-template-columns: 1fr;
+  }
+
+  .cart-item {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .qty-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
 `;
