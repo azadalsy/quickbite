@@ -1,0 +1,27 @@
+{
+  "name": "quickbite-backend",
+  "version": "1.0.0",
+  "description": "QuickBite restaurant ordering backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node seed.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "restaurant",
+    "express",
+    "mongodb",
+    "multitier"
+  ],
+  "author": "QuickBite",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.7",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.3"
+  }
+}
