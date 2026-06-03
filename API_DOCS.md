@@ -124,6 +124,61 @@ Returns dashboard statistics:
 }
 ```
 
+## Orders
+
+### GET `/orders`
+
+Returns customer orders for a normal user. Admin receives all orders.
+
+Headers:
+
+```text
+Authorization: Bearer <token>
+```
+
+### POST `/orders`
+
+Creates a checkout order from the user's cart.
+
+Headers:
+
+```text
+Authorization: Bearer <token>
+```
+
+Request:
+
+```json
+{
+  "items": [
+    {
+      "id": "food-id",
+      "name": "Classic Burger",
+      "price": 39,
+      "quantity": 2
+    }
+  ]
+}
+```
+
+### PUT `/orders/:id/status`
+
+Admin-only. Updates order status.
+
+Request:
+
+```json
+{
+  "status": "Preparing"
+}
+```
+
+Allowed statuses:
+
+```text
+Received, Preparing, Ready, Completed, Cancelled
+```
+
 ## Third-Party API
 
 ### GET `/weather`

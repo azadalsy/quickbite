@@ -298,6 +298,8 @@ function App() {
   const [weather, setWeather] = useState(null);
   const [analytics, setAnalytics] = useState(null);
   const [cartItems, setCartItems] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [resetForm, setResetForm] = useState({ email: "", newPassword: "" });
 
   useEffect(() => {
     fetchFoods();
@@ -322,12 +324,19 @@ function App() {
   useEffect(() => {
     if (!loggedUser) {
       setCartItems([]);
+      setOrders([]);
       return;
     }
 
     const savedCart = localStorage.getItem(getCartKey(loggedUser));
     setCartItems(savedCart ? JSON.parse(savedCart) : []);
   }, [loggedUser]);
+
+  useEffect(() => {
+    if (loggedUser && token) {
+      fetchOrders(token);
+    }
+  }, [loggedUser, token]);
 
   const menuItems = useMemo(
     () =>
@@ -395,6 +404,19 @@ function App() {
     }
   };
 
+  const fetchOrders = async (authToken = token) => {
+    if (!authToken) return;
+
+    try {
+      const response = await axios.get(`${API_URL}/orders`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      setOrders(response.data.data || []);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleFoodChange = (event) => {
     const { name, value } = event.target;
     setFoodForm((currentForm) => ({ ...currentForm, [name]: value }));
@@ -408,6 +430,11 @@ function App() {
   const handleLoginChange = (event) => {
     const { name, value } = event.target;
     setLoginForm((currentForm) => ({ ...currentForm, [name]: value }));
+  };
+
+  const handleResetChange = (event) => {
+    const { name, value } = event.target;
+    setResetForm((currentForm) => ({ ...currentForm, [name]: value }));
   };
 
   const addFood = async (event) => {
@@ -470,11 +497,7 @@ function App() {
 
     try {
       setIsLoading(true);
-      await axios.post(`${API_URL}/register`, registerForm);
-      const response = await axios.post(`${API_URL}/login`, {
-        email: registerForm.email,
-        password: registerForm.password,
-      });
+      const response = await axios.post(`${API_URL}/register`, registerForm);
 
       setLoggedUser(response.data.user);
       setToken(response.data.token || "");
@@ -506,6 +529,27 @@ function App() {
     } catch (error) {
       console.error(error);
       setMessage(error.response?.data?.message || "Login failed.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetPassword = async (event) => {
+    event.preventDefault();
+
+    if (!resetForm.email.trim() || !resetForm.newPassword) {
+      setMessage("Please enter account and new password.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await axios.post(`${API_URL}/password-reset`, resetForm);
+      setResetForm({ email: "", newPassword: "" });
+      setMessage("Password reset successfully.");
+    } catch (error) {
+      console.error(error);
+      setMessage(error.response?.data?.message || "Password reset failed.");
     } finally {
       setIsLoading(false);
     }
@@ -564,6 +608,61 @@ function App() {
   const clearCart = () => {
     saveCart([]);
     setMessage("Cart cleared.");
+  };
+
+  const placeOrder = async () => {
+    if (!loggedUser) {
+      setMessage("Please login before checkout.");
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      setMessage("Your cart is empty.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        `${API_URL}/orders`,
+        { items: cartItems },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      saveCart([]);
+      setOrders((currentOrders) => [response.data.order, ...currentOrders]);
+      fetchAnalytics();
+      setMessage("Order placed successfully.");
+    } catch (error) {
+      console.error(error);
+      setMessage(error.response?.data?.message || "Order could not be placed.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateOrderStatus = async (orderId, status) => {
+    try {
+      const response = await axios.put(
+        `${API_URL}/orders/${orderId}/status`,
+        { status },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setOrders((currentOrders) =>
+        currentOrders.map((order) =>
+          order._id === orderId ? response.data.order : order
+        )
+      );
+      setMessage(`Order marked as ${status}.`);
+    } catch (error) {
+      console.error(error);
+      setMessage("Order status could not be updated.");
+    }
   };
 
   const deleteFood = async (id) => {
@@ -702,6 +801,27 @@ function App() {
               </>
             )}
           </form>
+
+          <form onSubmit={resetPassword} className="form">
+            <h2>Password Reset</h2>
+            <input
+              name="email"
+              type="text"
+              placeholder="Account email"
+              value={resetForm.email}
+              onChange={handleResetChange}
+            />
+            <input
+              name="newPassword"
+              type="password"
+              placeholder="New password"
+              value={resetForm.newPassword}
+              onChange={handleResetChange}
+            />
+            <button type="submit" disabled={isLoading}>
+              Reset Password
+            </button>
+          </form>
         </section>
 
         {message && <p className="message">{message}</p>}
@@ -726,6 +846,12 @@ function App() {
             <span>Average price</span>
             <h2>{analytics?.averagePrice ?? "0.00"} PLN</h2>
             <p>Calculated from stored restaurant products.</p>
+          </article>
+
+          <article className="insight-card">
+            <span>Orders</span>
+            <h2>{analytics?.totalOrders ?? orders.length}</h2>
+            <p>Saved checkout orders with admin status tracking.</p>
           </article>
         </section>
 
@@ -863,12 +989,62 @@ function App() {
                   </article>
                 ))}
               </div>
-              <button type="button" className="clear-cart" onClick={clearCart}>
-                Clear cart
-              </button>
+              <div className="cart-footer">
+                <button type="button" onClick={placeOrder} disabled={isLoading}>
+                  Place order
+                </button>
+                <button type="button" className="clear-cart" onClick={clearCart}>
+                  Clear cart
+                </button>
+              </div>
             </>
           )}
         </section>
+
+        {loggedUser && (
+          <section className="panel orders-panel">
+            <div className="section-head">
+              <div>
+                <p className="eyebrow">Order tracking</p>
+                <h2>{isAdmin ? "All Orders" : "My Orders"}</h2>
+              </div>
+            </div>
+
+            {orders.length === 0 ? (
+              <p className="empty">No orders yet.</p>
+            ) : (
+              <div className="order-list">
+                {orders.map((order) => (
+                  <article key={order._id} className="order-card">
+                    <div>
+                      <h3>{order.customerName}</h3>
+                      <p>
+                        {order.items
+                          .map((item) => `${item.quantity}x ${item.name}`)
+                          .join(", ")}
+                      </p>
+                    </div>
+                    <strong>{Number(order.total).toFixed(2)} PLN</strong>
+                    <span className="status-pill">{order.status}</span>
+                    {isAdmin && (
+                      <div className="status-actions">
+                        {["Preparing", "Ready", "Completed"].map((status) => (
+                          <button
+                            key={status}
+                            type="button"
+                            onClick={() => updateOrderStatus(order._id, status)}
+                          >
+                            {status}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
       </main>
     </>
   );
@@ -1002,7 +1178,7 @@ h2 {
 
 .auth-panel {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 18px;
 }
 
@@ -1042,7 +1218,7 @@ h2 {
 
 .insights-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
   margin-top: 18px;
 }
@@ -1237,8 +1413,64 @@ h2 {
   background: #b3261e;
 }
 
-.clear-cart {
+.cart-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 14px;
+}
+
+.clear-cart {
+  color: #4a2d1e;
+  background: #f7e4d0;
+}
+
+.order-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.order-card {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #ead8c7;
+  border-radius: 10px;
+  background: #fffdf9;
+}
+
+.order-card h3 {
+  margin-bottom: 4px;
+  font-size: 18px;
+}
+
+.order-card p {
+  margin-bottom: 0;
+  color: #6c5b51;
+  font-weight: 700;
+}
+
+.status-pill {
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: #22533d;
+  background: #e9f8ef;
+  font-weight: 800;
+}
+
+.status-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.status-actions button {
+  color: #4a2d1e;
+  background: #f7e4d0;
 }
 
 .empty {
@@ -1274,6 +1506,10 @@ h2 {
 
   .cart-item {
     grid-template-columns: 64px 1fr;
+  }
+
+  .order-card {
+    grid-template-columns: 1fr;
   }
 
   .qty-actions {

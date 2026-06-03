@@ -9,8 +9,10 @@ QuickBite is a multitier restaurant menu and ordering management project. It dem
 - Admin menu management: create, edit, delete
 - Personal cart for each logged-in account
 - Cart total calculation in PLN
+- Checkout flow with saved orders
+- Admin order status management
 - User registration, login, logout
-- Password reset endpoint
+- Password reset endpoint and UI
 - Role-based access: admin and customer
 - JWT-style token authentication
 - MongoDB persistence with Mongoose models
@@ -27,7 +29,7 @@ QuickBite is a multitier restaurant menu and ordering management project. It dem
 flowchart LR
   A["Client Browser"] --> B["React Frontend"]
   B --> C["Express REST API"]
-  C --> D["MongoDB Atlas"]
+  C --> D["MongoDB Atlas: Users, Foods, Orders"]
   C --> E["Open-Meteo API"]
   C --> F["Live Events Stream"]
 ```
@@ -90,8 +92,10 @@ http://localhost:5173
 
 - Customers can register, log in and browse the restaurant menu.
 - Customers can add foods to their personal cart and see the total price.
+- Customers can place checkout orders from the cart.
 - Admin can log in with `admin / admin`.
 - Admin can add, edit and delete menu products.
+- Admin can view all orders and update order status.
 - Category buttons filter menu items by type.
 - Analytics cards show live menu statistics.
 - Weather card uses Open-Meteo as a third-party API integration.
@@ -101,8 +105,8 @@ http://localhost:5173
 
 - Multitier architecture: React, Express, MongoDB
 - Authentication and authorization: register, login, logout, password reset, role-based admin access
-- Business logic: menu CRUD, validation, error handling
-- Data management: MongoDB persistence, seeding, filtering, sorting, pagination
+- Business logic: menu CRUD, cart checkout, order workflow, validation, error handling
+- Data management: MongoDB persistence, User/Food/Order entities, seeding, filtering, sorting, pagination
 - UI: responsive restaurant interface
 - Integration: Open-Meteo API
 - Security/performance: password hashing, token auth, rate limiting, logging
