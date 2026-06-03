@@ -813,62 +813,62 @@ function App() {
           )}
         </section>
 
-        {loggedUser && (
-          <section className="panel cart-panel">
-            <div className="section-head">
-              <div>
-                <p className="eyebrow">Personal cart</p>
-                <h2>{loggedUser.name}'s Cart</h2>
-              </div>
-              <strong className="cart-total">{cartTotal.toFixed(2)} PLN</strong>
+        <section className="panel cart-panel">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">Personal cart</p>
+              <h2>{loggedUser ? `${loggedUser.name}'s Cart` : "Your Cart"}</h2>
             </div>
+            <strong className="cart-total">{cartTotal.toFixed(2)} PLN</strong>
+          </div>
 
-            {cartItems.length === 0 ? (
-              <p className="empty">Your cart is empty.</p>
-            ) : (
-              <>
-                <div className="cart-list">
-                  {cartItems.map((item) => (
-                    <article key={item.id} className="cart-item">
-                      <img src={item.image} alt={item.name} />
-                      <div>
-                        <h3>{item.name}</h3>
-                        <p>
-                          {item.quantity} x {Number(item.price).toFixed(2)} PLN
-                        </p>
-                      </div>
-                      <div className="qty-actions">
-                        <button
-                          type="button"
-                          onClick={() => changeCartQuantity(item.id, -1)}
-                        >
-                          -
-                        </button>
-                        <strong>{item.quantity}</strong>
-                        <button
-                          type="button"
-                          onClick={() => changeCartQuantity(item.id, 1)}
-                        >
-                          +
-                        </button>
-                        <button
-                          type="button"
-                          className="danger"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-                <button type="button" className="clear-cart" onClick={clearCart}>
-                  Clear cart
-                </button>
-              </>
-            )}
-          </section>
-        )}
+          {!loggedUser ? (
+            <p className="empty">Login to add foods to your personal cart.</p>
+          ) : cartItems.length === 0 ? (
+            <p className="empty">Your cart is empty.</p>
+          ) : (
+            <>
+              <div className="cart-list">
+                {cartItems.map((item) => (
+                  <article key={item.id} className="cart-item">
+                    <img src={item.image} alt={item.name} />
+                    <div>
+                      <h3>{item.name}</h3>
+                      <p>
+                        {item.quantity} x {Number(item.price).toFixed(2)} PLN
+                      </p>
+                    </div>
+                    <div className="qty-actions">
+                      <button
+                        type="button"
+                        onClick={() => changeCartQuantity(item.id, -1)}
+                      >
+                        -
+                      </button>
+                      <strong>{item.quantity}</strong>
+                      <button
+                        type="button"
+                        onClick={() => changeCartQuantity(item.id, 1)}
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        className="danger"
+                        onClick={() => removeFromCart(item.id)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <button type="button" className="clear-cart" onClick={clearCart}>
+                Clear cart
+              </button>
+            </>
+          )}
+        </section>
       </main>
     </>
   );
