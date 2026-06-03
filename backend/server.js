@@ -19,8 +19,60 @@ app.use(
 );
 app.use(express.json());
 
+const requestCounts = new Map();
+const liveClients = new Set();
+
+app.use((req, res, next) => {
+  const startedAt = Date.now();
+
+  res.on("finish", () => {
+    console.log(
+      `${req.method} ${req.originalUrl} ${res.statusCode} - ${
+        Date.now() - startedAt
+      }ms`
+    );
+  });
+
+  next();
+});
+
+app.use((req, res, next) => {
+  const windowMs = 60 * 1000;
+  const maxRequests = 120;
+  const key = req.ip;
+  const current = requestCounts.get(key) || { count: 0, resetAt: Date.now() + windowMs };
+
+  if (Date.now() > current.resetAt) {
+    current.count = 0;
+    current.resetAt = Date.now() + windowMs;
+  }
+
+  current.count += 1;
+  requestCounts.set(key, current);
+
+  if (current.count > maxRequests) {
+    return res.status(429).json({
+      success: false,
+      message: "Too many requests. Please try again later.",
+    });
+  }
+
+  next();
+});
+
 const hashPassword = (password) =>
   crypto.createHash("sha256").update(password).digest("hex");
+
+const sendLiveNotification = (message) => {
+  const payload = JSON.stringify({
+    message,
+    createdAt: new Date().toISOString(),
+  });
+
+  liveClients.forEach((client) => {
+    client.write(`data: ${payload}\n\n`);
+  });
+};
 
 const createToken = (user) => {
   const payload = {
@@ -108,6 +160,93 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/events", (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();
+
+  liveClients.add(res);
+  res.write(
+    `data: ${JSON.stringify({
+      message: "Connected to QuickBite live updates",
+      createdAt: new Date().toISOString(),
+    })}\n\n`
+  );
+
+  req.on("close", () => {
+    liveClients.delete(res);
+  });
+});
+
+app.get("/weather", async (req, res) => {
+  try {
+    const response = await fetch(
+      "https://api.open-meteo.com/v1/forecast?latitude=52.2297&longitude=21.0122&current=temperature_2m,weather_code"
+    );
+    const weather = await response.json();
+
+    res.json({
+      success: true,
+      provider: "Open-Meteo",
+      city: "Warsaw",
+      temperature: weather.current?.temperature_2m,
+      weatherCode: weather.current?.weather_code,
+      message: "Live weather data can help estimate restaurant delivery demand.",
+    });
+  } catch (error) {
+    res.status(502).json({
+      success: false,
+      message: "Weather service is unavailable",
+      error: error.message,
+    });
+  }
+});
+
+app.get("/analytics", async (req, res) => {
+  try {
+    const [totalFoods, totalUsers, categoryStats, averagePrice] =
+      await Promise.all([
+        Food.countDocuments(),
+        User.countDocuments(),
+        Food.aggregate([
+          {
+            $group: {
+              _id: "$category",
+              count: { $sum: 1 },
+              averagePrice: { $avg: "$price" },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ]),
+        Food.aggregate([
+          {
+            $group: {
+              _id: null,
+              average: { $avg: "$price" },
+            },
+          },
+        ]),
+      ]);
+
+    res.json({
+      success: true,
+      data: {
+        totalFoods,
+        totalUsers,
+        averagePrice: Number(averagePrice[0]?.average || 0).toFixed(2),
+        categories: categoryStats.map((item) => ({
+          category: item._id || "Uncategorized",
+          count: item.count,
+          averagePrice: Number(item.averagePrice || 0).toFixed(2),
+        })),
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.get("/foods", async (req, res) => {
   try {
     const {
@@ -179,6 +318,8 @@ app.post("/foods", authRequired, adminRequired, async (req, res) => {
       success: true,
       food,
     });
+
+    sendLiveNotification(`New menu item added: ${food.name}`);
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -202,6 +343,8 @@ app.put("/foods/:id", authRequired, adminRequired, async (req, res) => {
       success: true,
       food: updatedFood,
     });
+
+    sendLiveNotification(`Menu item updated: ${updatedFood.name}`);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -225,6 +368,8 @@ app.delete("/foods/:id", authRequired, adminRequired, async (req, res) => {
       success: true,
       message: "Food deleted successfully",
     });
+
+    sendLiveNotification(`Menu item deleted: ${deletedFood.name}`);
   } catch (error) {
     res.status(500).json({
       success: false,

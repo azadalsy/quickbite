@@ -14,7 +14,7 @@ const foodSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Meals", "Desserts", "Drinks"],
+      enum: ["Meals", "Soups", "Desserts", "Drinks"],
       default: "Meals",
     },
     description: {

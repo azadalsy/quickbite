@@ -6,7 +6,7 @@ const Food = require("./models/Food");
 const foods = [
   {
     name: "Classic Burger",
-    price: 10,
+    price: 39,
     category: "Meals",
     description: "Juicy beef burger with cheese, lettuce and house sauce.",
     image:
@@ -14,7 +14,7 @@ const foods = [
   },
   {
     name: "Margherita Pizza",
-    price: 15,
+    price: 42,
     category: "Meals",
     description: "Tomato sauce, mozzarella and fresh basil.",
     image:
@@ -22,7 +22,7 @@ const foods = [
   },
   {
     name: "Chicken Kebab",
-    price: 18,
+    price: 34,
     category: "Meals",
     description: "Grilled chicken kebab with vegetables and sauce.",
     image:
@@ -30,7 +30,7 @@ const foods = [
   },
   {
     name: "Creamy Pasta",
-    price: 13,
+    price: 38,
     category: "Meals",
     description: "Pasta served with creamy parmesan sauce.",
     image:
@@ -38,15 +38,55 @@ const foods = [
   },
   {
     name: "Fresh Salad",
-    price: 9,
+    price: 29,
     category: "Meals",
     description: "Fresh vegetables with olive oil and lemon dressing.",
     image:
       "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=80",
   },
   {
+    name: "Tomato Soup",
+    price: 19,
+    category: "Soups",
+    description: "Classic tomato soup served warm with fresh herbs.",
+    image:
+      "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Lentil Soup",
+    price: 18,
+    category: "Soups",
+    description: "Comforting lentil soup with vegetables and spices.",
+    image:
+      "https://images.unsplash.com/photo-1613844237701-8f3664fc2eff?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Chicken Noodle Soup",
+    price: 23,
+    category: "Soups",
+    description: "Chicken broth with noodles, herbs and tender chicken.",
+    image:
+      "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Mushroom Cream Soup",
+    price: 24,
+    category: "Soups",
+    description: "Creamy mushroom soup with a smooth rich flavor.",
+    image:
+      "https://images.unsplash.com/photo-1632931057819-4eefffa8e007?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Vegetable Soup",
+    price: 20,
+    category: "Soups",
+    description: "Seasonal vegetable soup with a light homemade broth.",
+    image:
+      "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?auto=format&fit=crop&w=900&q=80",
+  },
+  {
     name: "Chocolate Cake",
-    price: 7,
+    price: 24,
     category: "Desserts",
     description: "Rich chocolate cake with soft cream.",
     image:
@@ -54,7 +94,7 @@ const foods = [
   },
   {
     name: "Baklava",
-    price: 6,
+    price: 22,
     category: "Desserts",
     description: "Sweet layered pastry with nuts and syrup.",
     image:
@@ -62,7 +102,7 @@ const foods = [
   },
   {
     name: "Ice Cream",
-    price: 5,
+    price: 20,
     category: "Desserts",
     description: "Vanilla ice cream with seasonal toppings.",
     image:
@@ -70,7 +110,7 @@ const foods = [
   },
   {
     name: "Cheesecake",
-    price: 8,
+    price: 26,
     category: "Desserts",
     description: "Creamy cheesecake with berry sauce.",
     image:
@@ -78,7 +118,7 @@ const foods = [
   },
   {
     name: "Fruit Tart",
-    price: 7,
+    price: 25,
     category: "Desserts",
     description: "Crispy tart with custard and fresh fruit.",
     image:
@@ -86,7 +126,7 @@ const foods = [
   },
   {
     name: "Fresh Orange Juice",
-    price: 4,
+    price: 16,
     category: "Drinks",
     description: "Freshly squeezed orange juice.",
     image:
@@ -94,7 +134,7 @@ const foods = [
   },
   {
     name: "Iced Coffee",
-    price: 5,
+    price: 18,
     category: "Drinks",
     description: "Cold coffee served with ice and milk.",
     image:
@@ -102,7 +142,7 @@ const foods = [
   },
   {
     name: "Mint Lemonade",
-    price: 4,
+    price: 17,
     category: "Drinks",
     description: "Refreshing lemonade with mint.",
     image:
@@ -110,7 +150,7 @@ const foods = [
   },
   {
     name: "Hot Tea",
-    price: 3,
+    price: 12,
     category: "Drinks",
     description: "Freshly brewed hot tea.",
     image:
@@ -118,7 +158,7 @@ const foods = [
   },
   {
     name: "Sparkling Water",
-    price: 2,
+    price: 8,
     category: "Drinks",
     description: "Cold sparkling mineral water.",
     image:
